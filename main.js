@@ -1,23 +1,37 @@
 
 //TASK TWO
-function fetchProductDetails(){
-fetch( https://www.course-api.com/javascript-store-products )
+
+const productContainer = document.getElementById('product-container');//getting element from ID
+const errorMessage = document.getElementById('error-message'); //getting element from ID
+
+fetch('https://www.course-api.com/javascript-store-products')
     .then(response => {
-        if (!response.ok){
-            throw new Error('Network response is not ok' + response.statusText);
+        if (!response.ok) {
+            throw new Error('Network response was not ok'); 
         }
-        return response.json(); //check network response
+        return response.json();
     })
-    .then(products => {
-        displayProducts(products); //function to display products if successful.
+    .then(data => {
+        displayProducts(data);
     })
-    .catch(error => { //for catching the error
-        console.error('Error', error);
-        document.getElementById('product-container')
+    .catch(error => {
+        errorMessage.textContent = "Error Loading Contents";
+        // errorMessage.style.display = "block";
+        console.error('Fetch error:', error);
     });
 
-}
+ //TASK THREE
 
-function displayProducts(products) {
-    const container = document.getElementById('product-container');
-}
+ function displayProducts(data) {
+    data.forEach(product => {
+        const productDiv = document.createElement('div');
+        productDiv.classList.add('product');
+        productDiv.innerHTML =`
+            <h2>${product.name}</h2>
+            <img src="${product.image}" alt="${product.name}">
+            <p>Price: $${product.price}</p>
+            <p>Company: ${product.company}</p>
+        `;
+        productContainer.appendChild(productDiv);
+    });
+ }
